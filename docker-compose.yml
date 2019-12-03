@@ -12,10 +12,11 @@ services:
     links: 
       - mysql
     volumes: 
-      - ${DOCUMENT_ROOT-./www}:/var/www/html
-      - ${PHP_INI-./config/php/php.ini}:/usr/local/etc/php/php.ini
+      - ${DOCUMENT_ROOT-./www}:/var/www/html:cached
+      - ${PHP_INI-./config/php/php.ini}:/usr/local/etc/php/php.ini:cached
       - ${VHOSTS_DIR-./config/vhosts}:/etc/apache2/sites-enabled
-      - ${LOG_DIR-./logs/apache2}:/var/log/apache2
+      - ${LOG_DIR-./logs/apache2}:/var/log/apache2:cached
+      - ${PROFILER_LOG_DIR-./logs/profiler}:/var/log/profiler
   mysql:
     build:
       context: "./bin/${DATABASE}"
@@ -48,8 +49,3 @@ services:
       - '8080:80'
     volumes: 
       - /sessions
-  redis:
-    container_name: 'sc-redis'
-    image: redis:latest
-    ports:
-      - "${HOST_MACHINE_REDIS_PORT}:6379"
